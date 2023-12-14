@@ -108,6 +108,7 @@ app.post('/api/persons', (request, response) => {
     }
 })
 
+
 const generateID = () => {
     const maxId = persons.length > 0 
         ? Math.max(...persons.map(p => p.id))
@@ -115,6 +116,12 @@ const generateID = () => {
 
     return maxId + 1
 }
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({error: 'unknown endpoint'})
+}
+
+app.use(unknownEndpoint)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
