@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 if (process.argv.length < 3) {
-    console.log('Please provide the password as an argument: node data.js <your-password>')
+    console.log('Please provide the password as an argument: node mongo.js <your-password>')
     process.exit(1)
 }
 
@@ -40,5 +40,5 @@ else if (process.argv.length === 5) {
     })
 }
 else {
-    console.log('Please provide name and number both as arguments: node data.js <your-password> <name> <number>')
+    console.log('Please provide name and number both as arguments: node mongo.js <your-password> <name> <number>')
 }
