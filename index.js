@@ -59,15 +59,19 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(p => p.id === id)
-
-    if (person) {
-        response.json(person)
-    }
-    else {
-        response.status(404).end()
-    }
+    const id = request.params.id
+    //const person = persons.find(p => p.id === id)
+    Person.findById(id)
+        .then(person => {
+            if(!person){
+                response.status(404).end()
+            }
+            response.json(person)
+    })
+    .catch(error => {
+        console.error('Error finding person by ID', error)
+        response.status(400).json({error: 'malformatted id'})
+    })
 })
 
 
@@ -80,36 +84,43 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons', (request, response) => {
-    const person = request.body
+    const body = request.body
 
-    if (!person.name) {
+    if (!body.name) {
         console.log('Error : name not present in the post body!');
         const error = {
             error: 'Name must be present!'
         }
         response.status(400).json(error)
     }
-    else if (!person.number) {
+    else if (!body.number) {
         console.log('Error: Number not present in the post body!');
         const error = {
             error: 'Number must be present!'
         }
         response.status(400).json(error)
     }
-    else if (persons.find(p => p.name === person.name)) {
-        console.log('Error: Name must be unique!')
-        const error = {
-            error: 'This name is already in phonebook, name must be unique!'
-        }
-        response.status(400).json(error)
-    }
-    else {
-        persons.find(p => { p.name === person.name })
-        person.id = generateID()
-
-        persons = persons.concat(person)
-
-        response.json(person)
+   // else if (persons.find(p => p.name === body.name)) {
+   //  console.log('Error: Name must be unique!')
+   //   const error = {
+   //       error: 'This name is already in phonebook, name must be unique!'
+   //  }
+   //  response.status(400).json(error)
+   // }
+   else {
+        const person = new Person({
+            name: body.name,
+            number: body.number
+        })
+        person.save()
+            .then(savedPerson => {
+                console.log('Saved person to the database!')
+                response.json(savedPerson)
+            })
+            .catch(error => {
+                console.error('Error saving person to database!', error)
+                response.status(500).json({error: 'Error saving person to the database!'})
+            })
     }
 })
 
