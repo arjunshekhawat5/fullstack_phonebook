@@ -16,17 +16,17 @@ mongoose.connect(url)
 
 const personSchema = mongoose.Schema({
     name: {
-        type:String,
+        type: String,
         minLength: 3,
         required: true
     },
     number: {
         type: String,
         required: true,
-        minLength:9,
+        minLength: 9,
         validate: {
             validator: (v) => {
-                return /\d{2,3}-\d{5,}/.test(v)
+                return /^\d{2,3}-\d{5,}$/.test(v)
             }
         }
 
