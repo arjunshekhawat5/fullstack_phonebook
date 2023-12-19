@@ -5,7 +5,7 @@ const cors = require('cors')
 const app = express()
 const Person = require('./modules/Person')
 
-morgan.token('person', (request, response) => {
+morgan.token('person', (request) => {
     console.log(request.body)
     return JSON.stringify(request.body)
 })
@@ -54,7 +54,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndDelete(request.params.id)
-        .then(result => {
+        .then( () => {
             response.status(204).end()
         })
         .catch(error => next(error))
@@ -64,7 +64,7 @@ app.post('/api/persons', (request, response, next) => {
     const body = request.body
 
     if (!body.name || !body.number) {
-        console.log('Error : name and number must be present!');
+        console.log('Error : name and number must be present!')
         const error = {
             error: 'name and number must be present!'
         }
